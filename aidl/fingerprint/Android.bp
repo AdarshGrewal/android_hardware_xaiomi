@@ -11,12 +11,8 @@ soong_config_module_type {
     config_namespace: "XIAOMI_BIOMETRICS_FINGERPRINT",
     bool_variables: [
         "RUN_32BIT",
-        "USE_NEW_IMPL",
     ],
-    properties: [
-        "compile_multilib",
-        "cflags",
-    ],
+    properties: ["compile_multilib"],
 }
 
 xiaomi_hardware_biometrics_config_default {
@@ -29,10 +25,6 @@ xiaomi_hardware_biometrics_config_default {
             },
             compile_multilib: "prefer32",
         },
-
-        USE_NEW_IMPL: {
-            cflags: ["-DDEVICE_USES_NEW_IMPLEMENTATION"],
-        },
     },
 }
 
@@ -42,6 +34,10 @@ cc_binary {
     relative_install_path: "hw",
     init_rc: ["android.hardware.biometrics.fingerprint-service.xiaomi.rc"],
     vintf_fragments: ["android.hardware.biometrics.fingerprint-service.xiaomi.xml"],
+    cflags: select(soong_config_variable("XIAOMI_BIOMETRICS_FINGERPRINT", "USE_NEW_IMPL"), {
+        "true": ["-DDEVICE_USES_NEW_IMPLEMENTATION"],
+        default: [],
+    }),
     srcs: [
         "CancellationSignal.cpp",
         "Fingerprint.cpp",
