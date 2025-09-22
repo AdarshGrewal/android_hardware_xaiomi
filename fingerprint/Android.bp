@@ -6,6 +6,10 @@
 
 cc_library_static {
     name: "libudfpshandlerfactory",
+    cflags: select(soong_config_variable("XIAOMI_BIOMETRICS_FINGERPRINT", "USE_NEW_IMPL"), {
+        "true": ["-DDEVICE_USES_NEW_IMPLEMENTATION"],
+        default: [],
+    }),
     srcs: ["UdfpsHandler.cpp"],
     vendor: true,
     header_libs: ["xiaomifingerprint_headers"],
